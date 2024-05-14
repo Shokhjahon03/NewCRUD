@@ -189,7 +189,7 @@ let EditedValue=async(id:number)=>{
                                             description:string,
                                             image:string
                                         },i)=>(
-                                            <div key={i} className=""><img className="w-[30px] rounded-full" src={e.image} alt="alt" />
+                                            <div  key={i} className=" cursor-pointer border-b mb-[20px] hover:bg-white p-2 rounded-lg"><img className="w-[30px] rounded-full " src={e.image} alt="alt" />
                                             <p>{e.title}</p>
                                             </div>
                                         ))
