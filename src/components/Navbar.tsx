@@ -157,7 +157,10 @@ const Navbar = () => {
               }}
             >
               
-                <MenuItem  onClick={handleCloseNavMenu}>
+                <MenuItem  onClick={()=>{
+                  handleCloseNavMenu
+                  navg('/') 
+                }}>
                   <Typography textAlign="center">All Products</Typography>
                 </MenuItem>
                 <MenuItem  onClick={()=>{

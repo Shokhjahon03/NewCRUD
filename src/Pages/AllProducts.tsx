@@ -48,6 +48,7 @@ const AllProducts = () => {
     let [searchValue,setSearchValue]=useState('')
     let [searchProduct,setSearchProduct]=useState([])
     let [sortProducts,setSortProducts]=useState([])
+    let [loaderPut,setLoaderPut]=useState(false)
     let get_products=async()=>{
         try {
             let res=await axios.get('https://fakestoreapi.com/products')
@@ -69,7 +70,7 @@ const AllProducts = () => {
             category:string,
             description:string,
             image:string
-        })=>e.title.toLowerCase().includes(searchValue))
+        })=>e.title.toLowerCase().includes(searchValue.toLowerCase()))
         setSearchProduct(newary)
     }
 
@@ -124,10 +125,12 @@ let EditedValue=async(id:number)=>{
 
     
     let put_product=async(id:number)=>{
+        setLoaderPut(true)
         if (val.title!=='' && val.price!=='' && val.category!=='' && val.description!=='' && val.image!=='') {
             axios.put( `https://fakestoreapi.com/products/${id}`,newPutProductValue).then(response => {
             console.log(response);
             if (response.status === 200) {
+                setLoaderPut(false)
                 setOpen(false)
                 alert(`Muvofaqqiyatli uzgartirildi   status:${response.status}`)
                 setval({id:'',title:'',price:'',image:'',description:'',category:''})
@@ -300,6 +303,11 @@ let EditedValue=async(id:number)=>{
          </form>
         </Box>
       </Modal>
+     <div className={loaderPut?"w-full h-dvh fixed top-0 left-0 flex items-center justify-center z-50":'hidden'}>
+     <div className="loader">
+  <div className="justify-content-center jimu-primary-loading"></div>
+</div>
+     </div>
     </main>
   )
 }
