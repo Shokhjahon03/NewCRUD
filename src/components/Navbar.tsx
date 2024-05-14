@@ -16,7 +16,7 @@ import Modal from '@mui/material/Modal';
 import { Input } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Label, Textarea ,FileInput } from "flowbite-react";
+import { Label, Textarea  } from "flowbite-react";
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
 import CheckIcon from '@mui/icons-material/Check';
@@ -76,7 +76,6 @@ const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  let Settings=['profile', 'log out']
 
   let add_newProduct = async() => {
     console.log(values);

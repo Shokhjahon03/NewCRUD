@@ -48,7 +48,6 @@ const AllProducts = () => {
     let [searchValue,setSearchValue]=useState('')
     let [searchProduct,setSearchProduct]=useState([])
     let [sortProducts,setSortProducts]=useState([])
-    let [getIdProduct,setGetIdProduct]=useState([])
     let get_products=async()=>{
         try {
             let res=await axios.get('https://fakestoreapi.com/products')
@@ -99,7 +98,7 @@ const AllProducts = () => {
         }
         // console.log(id);
     }
-    let [newPutProductValue,setNewProductValue] =useState<{
+    let [newPutProductValue] =useState<{
         title:string,
         price:string,
         category:string,
