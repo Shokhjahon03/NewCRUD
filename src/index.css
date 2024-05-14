@@ -125,3 +125,6 @@
       height: 40px;
     }
   }
+  .sellected{
+    background-color: rgba(0, 0, 0, 0.34);
+  }

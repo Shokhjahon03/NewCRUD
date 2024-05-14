@@ -49,6 +49,8 @@ const AllProducts = () => {
     let [searchProduct,setSearchProduct]=useState([])
     let [sortProducts,setSortProducts]=useState([])
     let [loaderPut,setLoaderPut]=useState(false)
+    let [openProduct,setOpenProduct]=useState(false)
+    let [selectItemValue,setSelectItemValue]=useState<any>({})
     let get_products=async()=>{
         try {
             let res=await axios.get('https://fakestoreapi.com/products')
@@ -60,6 +62,14 @@ const AllProducts = () => {
             console.log(error.message);
             setLoading(false)
         }
+    }
+
+    let select_item=(item:{})=>{   
+            setSelectItemValue(item)
+            setOpenProduct(true)
+            console.log('salom');
+            console.log(selectItemValue);
+            
     }
 
     let search_product=()=>{
@@ -189,7 +199,7 @@ let EditedValue=async(id:number)=>{
                                             description:string,
                                             image:string
                                         },i)=>(
-                                            <div  key={i} className=" cursor-pointer border-b mb-[20px] hover:bg-white p-2 rounded-lg"><img className="w-[30px] rounded-full " src={e.image} alt="alt" />
+                                            <div onClick={()=>select_item(e)}  key={i} className=" cursor-pointer border-b mb-[20px] hover:bg-white p-2 rounded-lg"><img className="w-[30px] rounded-full " src={e.image} alt="alt" />
                                             <p>{e.title}</p>
                                             </div>
                                         ))
@@ -307,6 +317,17 @@ let EditedValue=async(id:number)=>{
      <div className="loader">
   <div className="justify-content-center jimu-primary-loading"></div>
 </div>
+     </div>
+
+     <div className={openProduct?'w-full h-dvh flex justify-center items-center z-50 fixed top-0 left-0 sellected':'hidden'}>
+                        <div className="max-w-[300px] w-full h-[400px] p-3 rounded-xl bg-white flex flex-col gap-5 overflow-y-scroll">
+                            <img src={selectItemValue.image} alt="alt" />
+                            <p>{selectItemValue.title}</p>
+                            <p>Price : {selectItemValue.price}$</p>
+                            <p>Category : {selectItemValue.category}</p>
+                            <p>{selectItemValue.description}</p>
+                            <Button onClick={()=>setOpenProduct(!openProduct)}><CloseIcon/></Button>
+                        </div>
      </div>
     </main>
   )
