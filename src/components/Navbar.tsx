@@ -17,6 +17,11 @@ import { Input } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Label, Textarea ,FileInput } from "flowbite-react";
+import axios from 'axios';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -33,7 +38,18 @@ const style = {
   };
 
 const Navbar = () => {
-    const [age, setAge] = useState('');
+    let navg=useNavigate()
+    let [age, setAge] = useState('');
+    let [alertOk, setAlertOk]= useState(false);
+
+    let [values,setValues]=useState<{title:string,price:string,category:string,description:string,image:string}>(
+      { 
+        title: '',
+        price: '',
+        category: age,
+        description: '',
+        image:'https://en.mamasandpapas.com.bh/dw/image/v2/BDSP_PRD/on/demandware.static/-/Sites-MnP-master-catalog/default/dw2f3f93c4/images/hi-res/MNP/MNP/216/216397036/216397036_fr.jpg?sw=540&sh=720&sm=fit&q=90'
+      })
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
@@ -61,6 +77,32 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
   let Settings=['profile', 'log out']
+
+  let add_newProduct = async() => {
+    console.log(values);
+    
+    if (values.category !=='' && values.title!=='' && values.description!=='' && values.price!=='')  {
+      axios.post('https://fakestoreapi.com/products',values,{
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })  .then(function (response) {
+      console.log(response);
+      if (response.status === 200) {
+        setAlertOk(true)
+        setOpen(false)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    // setAlertOk(true)
+    // console.log('salom');
+    }
+    
+    
+    
+  }
 
   return (
    <nav className='fixed top-0 left-0 w-full z-50'>
@@ -119,12 +161,13 @@ const Navbar = () => {
                 <MenuItem  onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">All Products</Typography>
                 </MenuItem>
-                <MenuItem  onClick={handleCloseNavMenu}>
+                <MenuItem  onClick={()=>{
+                  handleChange
+                  handleOpen()
+                }}>
                   <Typography textAlign="center">Add Products</Typography>
                 </MenuItem>
-                <MenuItem  onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Savat</Typography>
-                </MenuItem>
+              
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -149,8 +192,12 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             
               <Button 
-              
-                onClick={handleCloseNavMenu}
+                
+                onClick={()=>
+                  // handleCloseNavMenu()
+                  navg('/')
+ 
+                }
                 sx={{ my: 2, color: 'white', display: 'block' }}>
                     All PRODUCT
               </Button>
@@ -159,12 +206,6 @@ const Navbar = () => {
               onClick={handleOpen}
               sx={{ my: 2, color: 'white', display: 'block',backgroundColor:'green' }}>
                   ADD NEW PRODUCT
-            </Button>
-            <Button 
-              
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}>
-                  SAVAT
             </Button>
           </Box>
 
@@ -190,11 +231,14 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {Settings.map((setting,i) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography color={i>0?'red':'black'} textAlign="center">{setting}</Typography>
+            
+                <MenuItem  onClick={()=>{
+                  handleCloseUserMenu
+                  navg('/profile')
+                }}>
+                  <Typography textAlign="center">Profile</Typography>
                 </MenuItem>
-              ))}
+             
             </Menu>
           </Box>
         </Toolbar>
@@ -207,17 +251,22 @@ const Navbar = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+              
+              {/* Add product */}
+
               <form className='w-full flex flex-col gap-y-5'>
                     <Typography><span className='text-green-500'>New</span> Product</Typography>
-                    <Input sx={{outline:'none',borderRadius:'10px'}} className='w-full rounded-xl' placeholder='Product Name'></Input>
-                    <Input sx={{outline:'none',borderRadius:'10px'}} className='w-full ' placeholder='Product Price'></Input>
+                    <Input value={values.title}
+                     onChange={(e)=>setValues({title:e.target.value,price:values.price,category:values.category,description:values.description,image:values.image})} sx={{outline:'none',borderRadius:'10px'}} className='w-full rounded-xl' placeholder='Product Name'></Input>
+                    <Input value={values.price}
+                     onChange={(e)=>setValues({title:values.title,price:e.target.value,category:values.category,description:values.description,image:values.image})} sx={{outline:'none',borderRadius:'10px'}} className='w-full' type='number' placeholder='Product Price'></Input>
                     <InputLabel id="demo-select-small-label">Category</InputLabel>
-                    <Select
+                    <Select 
                         labelId="demo-select-small-label"
                         id="demo-select-small"
-                        value={age}
+                        value={values.category}
                         label="Category"
-                        onChange={handleChange}
+                        onChange={(e)=>setValues({title:values.title,price:values.price,category:e.target.value,description:values.description,image:values.image})}
                     >
                        <MenuItem value={"men's clothing"}>men's clothing</MenuItem>
                                     <MenuItem value={"jewelery"}>jewelery</MenuItem>
@@ -228,18 +277,28 @@ const Navbar = () => {
                     <div className="mb-2 block">
                         <Label htmlFor="comment" value="Description" />
                     </div>
-                    <Textarea id="comment" placeholder="Leave a comment..." required rows={4} />
+                    <Textarea 
+                    onChange={(e)=>setValues({title:values.title,price:values.price,category:values.category,description:e.target.value,image:values.image})} id="comment" placeholder="Leave a comment..." required rows={4} />
                     </div>
                     <div>
                     <div className="mb-2 block">
                         <Label htmlFor="file-upload" value="Product Img" />
                     </div>
-                    <FileInput id="file-upload" />
+                    {/* <FileInput id="file-upload" /> */}
                     </div>
-                    <Button variant="outlined">Add Product</Button>
+                    <Button onClick={()=>add_newProduct()} variant="outlined">Add Product</Button>
               </form>
+
+
         </Box>
       </Modal>
+      
+      <Alert 
+      sx={alertOk?{height:100,display:'flex',alignItems:'center'}:{display:'none'}} icon={<CheckIcon fontSize="inherit" />} severity="success">
+      Malumotlar Muvofaqqiyaqli yuklandi [status 200]
+      <button onClick={()=>setAlertOk(false)} className='ml-[20px]'><CloseIcon/></button>
+    </Alert>
+
    </nav>
   )
 }

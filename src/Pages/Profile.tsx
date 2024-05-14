@@ -1,10 +1,21 @@
 import  { Component } from 'react'
-
-export default class Profile extends Component {
+import { Link } from 'react-router-dom';
+  type classProps = {
+    values: {name: string,pass: string};
+  }
+export default class Profile extends Component<classProps> {
   render() {
+    console.log(this.props.values);
+    let name = this.props.values
     return (
-      <div>
-        
+      <div className='mt-[100px] w-full'>
+       <div className="container">
+        <div className='w-full flex flex-col items-center gap-8'>
+          <p>User Name : {name.name}</p>
+          <p>User password : {name.pass}</p>
+       
+        </div>
+       </div>
       </div>
     )
   }
