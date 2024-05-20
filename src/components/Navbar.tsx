@@ -36,7 +36,7 @@ const style = {
     p: 4,
     borderRadius: 4,
   };
-
+ 
 const Navbar = () => {
     let navg=useNavigate()
     let [age, setAge] = useState('');
@@ -48,7 +48,7 @@ const Navbar = () => {
         price: '',
         category: age,
         description: '',
-        image:'https://en.mamasandpapas.com.bh/dw/image/v2/BDSP_PRD/on/demandware.static/-/Sites-MnP-master-catalog/default/dw2f3f93c4/images/hi-res/MNP/MNP/216/216397036/216397036_fr.jpg?sw=540&sh=720&sm=fit&q=90'
+        image:''
       })
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -81,7 +81,7 @@ const Navbar = () => {
     console.log(values);
     
     if (values.category !=='' && values.title!=='' && values.description!=='' && values.price!=='')  {
-      axios.post('https://fakestoreapi.com/products',values,{
+      axios.post('https://663bb05ffee6744a6ea295d0.mockapi.io/prod',values,{
       headers: {
         'Content-Type': 'application/json'
       }
@@ -192,12 +192,21 @@ const Navbar = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            
-              <Button 
+          <Button 
                 
                 onClick={()=>
                   // handleCloseNavMenu()
                   navg('/')
+ 
+                }
+                sx={{ my: 2, color: 'white', display: 'block' }}>
+                   CLIENT
+              </Button>
+              <Button 
+                
+                onClick={()=>
+                  // handleCloseNavMenu()
+                  navg('/all')
  
                 }
                 sx={{ my: 2, color: 'white', display: 'block' }}>
@@ -286,7 +295,7 @@ const Navbar = () => {
                     <div className="mb-2 block">
                         <Label htmlFor="file-upload" value="Product Img" />
                     </div>
-                    {/* <FileInput id="file-upload" /> */}
+                        <input value={values.image} className='w-full rounded-xl' onChange={(e)=>setValues({title:values.title,price:values.price,category:values.category,description:values.description,image:e.target.value})} placeholder='Image URL' type="text" />
                     </div>
                     <Button onClick={()=>add_newProduct()} variant="outlined">Add Product</Button>
               </form>

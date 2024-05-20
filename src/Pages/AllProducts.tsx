@@ -15,6 +15,7 @@ import { Label, Textarea } from "flowbite-react";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CloseIcon from '@mui/icons-material/Close';
+import Navbar from "../components/Navbar";
 
 
 const style = {
@@ -37,8 +38,11 @@ type productType ={
     description:string,
     image:string
 }
-const AllProducts = () => {
-
+type PROPSTYPE={
+    vareb:boolean,
+    setVareb:(a:boolean)=>void,
+}
+const AllProducts = (props:PROPSTYPE) => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -53,7 +57,7 @@ const AllProducts = () => {
     let [selectItemValue,setSelectItemValue]=useState<any>({})
     let get_products=async()=>{
         try {
-            let res=await axios.get('https://fakestoreapi.com/products')
+            let res=await axios.get('https://663bb05ffee6744a6ea295d0.mockapi.io/prod')
         let data=await res.data
         setProducts(data)
         setLoading(false)
@@ -96,11 +100,12 @@ const AllProducts = () => {
     
     let daleteProduct=(id:number)=>{
         if (confirm('Are you sure you want to')) {
-            axios.delete(`https://fakestoreapi.com/products/${id}`).then(response => {
+            axios.delete(`https://663bb05ffee6744a6ea295d0.mockapi.io/prod/${id}`).then(response => {
             console.log('User deleted successfully:', response);
             if (response.status === 200) {
                 alert(`User deleted successfully status:${response.status} Deleted product id: ${id}`)
             }
+            props.setVareb(!props.vareb)
           })
           .catch(error => {
             console.error('Error deleting user:', error);
@@ -126,7 +131,7 @@ const AllProducts = () => {
     {id:'',title:'',price:'',image:'',description:'',category:''}
   )
 let EditedValue=async(id:number)=>{
-    let a=await axios.get(`https://fakestoreapi.com/products/${id}`)
+    let a=await axios.get(`https://663bb05ffee6744a6ea295d0.mockapi.io/prod/${id}`)
     let b=await a.data
     setval(b)
     console.log(b);
@@ -137,7 +142,7 @@ let EditedValue=async(id:number)=>{
     let put_product=async(id:number)=>{
         setLoaderPut(true)
         if (val.title!=='' && val.price!=='' && val.category!=='' && val.description!=='' && val.image!=='') {
-            axios.put( `https://fakestoreapi.com/products/${id}`,newPutProductValue).then(response => {
+            axios.put( `https://663bb05ffee6744a6ea295d0.mockapi.io/prod/${id}`,newPutProductValue).then(response => {
             console.log(response);
             if (response.status === 200) {
                 setLoaderPut(false)
@@ -145,6 +150,7 @@ let EditedValue=async(id:number)=>{
                 alert(`Muvofaqqiyatli uzgartirildi   status:${response.status}`)
                 setval({id:'',title:'',price:'',image:'',description:'',category:''})
             }
+            props.setVareb(!props.vareb)
           })
           .catch((error:Error) => {
                 alert(error.message)
@@ -155,7 +161,7 @@ let EditedValue=async(id:number)=>{
 
     useEffect(()=>{
         get_products()
-    },[age])
+    },[age,props.vareb])
 
     useEffect(()=>{
         search_product()
@@ -167,6 +173,7 @@ let EditedValue=async(id:number)=>{
 
   return (
     <main className="w-full mt-[100px]">
+        <Navbar/>
          <div className="container">
                         <div className="mb-[50px] relative flex justify-between flex-wrap w-full gap-5 border-b pb-[20px]">
                             <input onChange={(e)=>setSearchValue(e.target.value)} className="outline-none rounded-2xl border-none" type="search" placeholder='search product' />
